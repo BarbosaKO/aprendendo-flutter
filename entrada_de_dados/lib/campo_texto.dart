@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CampoTexto extends StatefulWidget {
-  const CampoTexto({Key? key}) : super(key: key);
+  late String valor;
+  CampoTexto({Key? key, this.valor = ""}) : super(key: key);
 
   @override
   State<CampoTexto> createState() => _CampoTextoState();
@@ -15,7 +17,7 @@ class _CampoTextoState extends State<CampoTexto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Entrada de dados"),
+        title: Text("Entrada de dados ${widget.valor}"),
       ),
       body: Center(
         child: Container(
