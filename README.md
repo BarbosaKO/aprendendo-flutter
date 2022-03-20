@@ -19,3 +19,12 @@ eu já fiz, foram:
 
 
 	- Calculadora, só uma simples calculadora para testar um layout mais complexo.
+	
+	
+	- Flutter Curriculum, app apenas para testar um layout de curriculo.
+	
+	
+	- Switch Color, app com um widget de Switch que troca o tema do app.
+	
+	
+	- Luck Dices app, jogo que gera dois dados com valores aleatórios.
