@@ -1,15 +1,23 @@
 import 'dart:convert';
 
+import 'package:consumo_servico_avancado/post.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
-  Future<Map> _recuperarPreco() async {
-    String url = "https://blockchain.info/ticker";
-    http.Response response = await http.get(Uri.parse(url));
-    return jsonDecode(response.body);
+  final String _urlBase = "https://jsonplaceholder.typicode.com";
+
+  Future<List<Post>> _recuperarPostagens() async {
+    String urlPostagens = "$_urlBase/posts";
+    http.Response response = await http.get(Uri.parse(urlPostagens));
+    var result = jsonDecode(response.body);
+    List<Post> posts = [];
+    for (var post in result) {
+      posts.add(Post(post['userId'], post['id'], post['title'], post['body']));
+    }
+    return posts;
   }
 
   @override
@@ -18,32 +26,29 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Consumo Serviço Avançado"),
       ),
-      body: FutureBuilder<Map>(
-        future: _recuperarPreco(),
+      body: FutureBuilder<List<Post>>(
+        future: _recuperarPostagens(),
         builder: (context, snapshot) {
-          late String resultado;
-
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              resultado = "Carregando...";
-              print("Waiting");
-              break;
+              return const Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
-                resultado = "Houve um erro!";
+                print("Houve um erro!");
               } else {
-                double valor = snapshot.data?['BRL']['buy'];
-                resultado = "O valor do bitcoin está em ${valor.toString()}";
+                print("Lista carregada!");
               }
-              print("Done");
               break;
           }
-
-          return Center(
-            child: Text(resultado),
-          );
+          return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(snapshot.data![index].title),
+                );
+              });
         },
       ),
     );
